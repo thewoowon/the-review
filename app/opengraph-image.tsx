@@ -23,7 +23,7 @@ export default async function OG() {
           justifyContent: "center",
           backgroundColor: "white",
           backgroundImage:
-            "linear-gradient(to bottom right, #32cd32 25%, #ffff00 50%, #ffc0cb 75% #800080 100%)",
+            "linear-gradient(90deg, rgba(50,205,50,1) 0%, rgba(255,255,0,1) 34%, rgba(255,192,203,1) 66%, rgba(128,0,128,1) 100%)",
         }}
       >
         <img
@@ -31,7 +31,7 @@ export default async function OG() {
             "../public/apple-touch-icon.png",
             import.meta.url
           ).toString()}
-          alt="Liftoff Logo"
+          alt="THE REVIEW"
           tw="w-20 h-20 mb-4 opacity-95"
         />
         <h1
@@ -40,12 +40,12 @@ export default async function OG() {
             background:
               "linear-gradient(to bottom right, #1E2B3A 21.66%, #78716c 86.47%)",
             backgroundClip: "text",
-            color: "transparent",
+            color: "white",
             lineHeight: "5rem",
             letterSpacing: "-0.02em",
           }}
         >
-          세상의 모든 리뷰, THE REVIEW
+          THE REVIEW
         </h1>
       </div>
     ),
