@@ -23,7 +23,7 @@ export default async function OG() {
           justifyContent: "center",
           backgroundColor: "white",
           backgroundImage:
-            "linear-gradient(to bottom right, #E0E7FF 25%, #ffffff 50%, #bde1ff 75%)",
+            "linear-gradient(to bottom right, #32cd32 25%, #ffff00 50%, #ffc0cb 75% #800080 100%)",
         }}
       >
         <img
@@ -45,7 +45,7 @@ export default async function OG() {
             letterSpacing: "-0.02em",
           }}
         >
-          AI Mock Interviews
+          세상의 모든 리뷰, THE REVIEW
         </h1>
       </div>
     ),
