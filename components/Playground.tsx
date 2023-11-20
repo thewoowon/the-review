@@ -17,17 +17,9 @@ import { getRandomInt } from "@/utils/getRandomInt";
 import { contents } from "@/constants/contents";
 import Viewer from "./Viewer";
 
-// const PDF = dynamic(() => import("../components/PDF"), {
-//   ssr: false,
-// }) as any;
-
 const PDFDownload = dynamic(() => import("../components/PDFDownload"), {
   ssr: false,
 }) as any;
-
-// const PDFViewer = dynamic(() => import("../components/PDFViewer"), {
-//   ssr: false,
-// }) as any;
 
 const generatedMode = [
   {
@@ -49,6 +41,8 @@ const generatedMode = [
 type FormType = {
   name: string;
   department: string;
+  title: string;
+  content: string;
 };
 
 function classNames(...classes: string[]) {
@@ -56,7 +50,7 @@ function classNames(...classes: string[]) {
 }
 
 export default function PlaygroundPage() {
-  const randomInt = getRandomInt(1);
+  const randomInt = getRandomInt(5);
   const [selected, setSelected] = useState(generatedMode[0]);
 
   const [step, setStep] = useState(1);
@@ -70,7 +64,14 @@ export default function PlaygroundPage() {
     content: string;
   }>(contents[randomInt]);
 
-  const { register, getValues, watch } = useForm<FormType>();
+  const { register, getValues, watch, setValue } = useForm<FormType>({
+    defaultValues: {
+      name: "",
+      department: "",
+      title: "",
+      content: "",
+    },
+  });
 
   const router = useRouter();
 
@@ -204,6 +205,15 @@ export default function PlaygroundPage() {
                   <div>
                     <button
                       onClick={() => {
+                        if (selected.id === 1) {
+                          // 램덤 독후감...
+                          setValue("title", selectedBook.title);
+                          setValue("content", selectedContent.content);
+                        } else {
+                          setValue("title", "");
+                          setValue("content", "");
+                        }
+
                         setStep(2);
                       }}
                       className="group rounded-full px-4 py-2 text-[13px] font-semibold transition-all flex items-center justify-center bg-[#1E2B3A] text-white hover:[linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #0D2247] no-underline flex gap-x-2  active:scale-95 scale-100 duration-75"
@@ -273,12 +283,44 @@ export default function PlaygroundPage() {
                       />
                     </div>
                   </div>
+                  <div className="py-2">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      제목
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        {...register("title", { required: true })}
+                        type="text"
+                        name="title"
+                        id="title"
+                        autoComplete="off"
+                        className="shadow-lg block w-full sm:text-sm border border-gray-300 rounded-md p-2 outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                    </div>
+                  </div>
                 </form>
                 {selectedCorpus && (
-                  <div className="mt-8">
-                    <p className="font-semibold">선택된 말뭉치</p>
-                    <div className="p-1 bg-slate-100 rounded-lg max-h-[100px] overflow-scroll">
-                      {selectedCorpus}
+                  <div className="py-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      선택된 말뭉치
+                    </label>
+                    <div className="mt-1">
+                      <textarea
+                        onChange={(e) => {
+                          setSelectedCorpus(e.target.value);
+                        }}
+                        className="shadow-lg block w-full sm:text-sm border border-gray-300 rounded-md p-2 outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        value={selectedCorpus}
+                        style={{
+                          resize: "none",
+                          minHeight: "200px",
+                          width: "100%",
+                          outline: "none",
+                        }}
+                      />
                     </div>
                   </div>
                 )}
@@ -297,9 +339,21 @@ export default function PlaygroundPage() {
                   <div>
                     <button
                       onClick={() => {
-                        const { name, department } = getValues();
+                        const { name, department, title } = getValues();
                         if (!name || !department) {
                           return toast.error("이름과 부서 입력이 필요합니다!", {
+                            icon: "😥",
+                            position: "top-center",
+                            style: {
+                              borderRadius: "10px",
+                              background: "#FF0000",
+                              color: "#fff",
+                            },
+                          });
+                        }
+
+                        if (!title) {
+                          return toast.error("제목은 필수입니다!", {
                             icon: "😥",
                             position: "top-center",
                             style: {
@@ -346,14 +400,14 @@ export default function PlaygroundPage() {
                 <div className="flex justify-center items-center gap-2">
                   {selected.id === 1 ? (
                     <PDFDownload
-                      title={selectedBook.title}
+                      title={watch("title")}
                       name={watch("name")}
                       department={watch("department")}
-                      content={selectedContent.content}
+                      content={watch("content")}
                     />
                   ) : (
                     <PDFDownload
-                      title={selectedBook.title}
+                      title={watch("title")}
                       name={watch("name")}
                       department={watch("department")}
                       content={selectedCorpus}
@@ -400,10 +454,10 @@ export default function PlaygroundPage() {
                       className="max-w-lg mx-auto h-full flex justify-center items-center"
                     >
                       <Viewer
-                        title={selectedBook.title}
+                        title={watch("title")}
                         name={watch("name")}
                         department={watch("department")}
-                        content={selectedContent.content}
+                        content={watch("content")}
                       />
                     </motion.div>
                   </div>
@@ -510,10 +564,10 @@ export default function PlaygroundPage() {
                       className="max-w-lg mx-auto h-full flex justify-center items-center"
                     >
                       <Viewer
-                        title={selectedBook.title}
+                        title={watch("title")}
                         name={watch("name")}
                         department={watch("department")}
-                        content={selectedContent.content}
+                        content={watch("content")}
                       />
                     </motion.div>
                   </div>
@@ -531,7 +585,7 @@ export default function PlaygroundPage() {
                       className="max-w-lg mx-auto h-full flex justify-center items-center"
                     >
                       <Viewer
-                        title={selectedBook.title}
+                        title={watch("title")}
                         name={watch("name")}
                         department={watch("department")}
                         content={selectedCorpus ?? ""}
