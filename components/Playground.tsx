@@ -533,9 +533,7 @@ export default function PlaygroundPage() {
                   >
                     <div className="hidden sm:block">
                       <p className=" text-[#1a2b3b]">
-                        Showing <span className="font-medium">1</span> to{" "}
-                        <span className="font-medium">9</span> of{" "}
-                        <span className="font-medium">500</span> results
+                        전체 {books.length}권 중 {books.length}권
                       </p>
                     </div>
                     <div className="flex flex-1 justify-between sm:justify-end">
